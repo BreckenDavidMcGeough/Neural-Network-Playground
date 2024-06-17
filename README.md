@@ -1,5 +1,5 @@
 # Neural-Network-Playground
-## An implementation of a custom neural network architecture builder from scratch in Python
+## An implementation of an artificial neural network builder with user-specified architecture from scratch in Python
 
 The user can see how different neural network architectures do on a training dataset. The user could specify the number of hidden layers in their neural network, the number of neurons per hidden layer, and the input and output feature of the dataset. They are also able to input an activation function of their choice (ReLU, sigmoid, softmax, etc.) to be used in forward propagation numeric linear algebra calculations, and are able to specify which loss function they want to utilize (cross entropy for classification, mean squared error for regression) in gradient descent calculations during backpropagation. The user is also able to specify hyperparameters such as the number of epochs during training and the learning rate. All of this allows the user to inspect how different neural network architectures and hyperparamters can influence the learning process and final result of the neural network. 
 
