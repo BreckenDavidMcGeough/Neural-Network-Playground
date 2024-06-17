@@ -21,6 +21,6 @@ Here are some links that give more information on hyperparameters and different 
 
 * [loss functions](https://towardsdatascience.com/loss-functions-and-their-use-in-neural-networks-a470e703f1e9)
 
-## How to run 
+## How to use it for yourself 
 
 I am currently working on a UI in the terminal that will allow the user to input specifics and get back the accuracy and layout of their architecture. For now, just adjust the activation/loss functions (check out the activation and loss functions link for the specific mathematical functions) and change the hyperparamters values.
