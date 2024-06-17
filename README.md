@@ -24,3 +24,9 @@ Here are some links that give more information on hyperparameters and different 
 ## How to use it for yourself 
 
 I am currently working on a UI in the terminal that will allow the user to input specifics and get back the accuracy and layout of their architecture. For now, just adjust the activation/loss functions (check out the activation and loss functions link for the specific mathematical functions) and change the hyperparamters values.
+
+## Results and metrics
+
+Utilizing metrics such as the mean squared error, I was able to construct an architecture and tune hyperparameters sufficiently to get an extremely close prediction matrix to the actual output data. 
+
+* [MSE](https://en.wikipedia.org/wiki/Mean_squared_error#Predictor)
