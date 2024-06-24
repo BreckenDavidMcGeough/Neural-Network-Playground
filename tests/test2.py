@@ -26,18 +26,12 @@ def sigmoid(z):
 def RELU(z):
     pass
 
+args = getArgs()
 
-###########################CHANGE VARIABLES BELOW#############################
-
-num_hidden_layers = 3
-num_hidden_neurons = 4
-epochs = 25000
-learning_rate = 1
-
-##############################################################################
-
-
-#train and predict
+num_hidden_layers = args[1]
+num_hidden_neurons = args[2]
+epochs = args[3]
+learning_rate = args[4]
 
 NN = NeuralNetworkArchitecture(X, y, num_hidden_layers, num_hidden_neurons, sigmoid, epochs, learning_rate)
 NN.train()
