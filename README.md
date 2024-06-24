@@ -27,8 +27,12 @@ Here are some links that give more information on hyperparameters and different 
 
 I am currently working on a UI in the terminal that will allow the user to input specifics and get back the accuracy and layout of their architecture. For now, just adjust the activation/loss functions (check out the activation and loss functions link for the specific mathematical functions) and change the hyperparamters values.
 
+First, clone the repo. Then, navigate to the 'tests' directory and run the 'test1.py' script. Within the 'test1.py' script, you can modify the training data and the values of the number of hidden layers, number of neurons per hidden layer, number of training epochs, learning rate, and can swap out or add activation functions to fully customize your ANN architecture. Just save and run again.
+
+'test2.py' will receive inputs from the command line in the form of [hidden_layers,hidden_neurons,epochs,learning_rate] when you run the script, and will construct your ANN.
+
 ## Results and metrics
 
-Utilizing metrics such as the mean squared error, I was able to construct an architecture and tune hyperparameters sufficiently to get an extremely close prediction matrix to the actual output data. 
+Utilizing metrics such as the mean squared error, I was able to construct an architecture and tune hyperparameters sufficiently to get an extremely close prediction matrix to the actual output training data in 'test1.py'. I tested the trained model on some novel inputs, and received predictions that I would deem accurate and solid, taking into account the training data. 
 
 * [MSE](https://en.wikipedia.org/wiki/Mean_squared_error#Predictor)
