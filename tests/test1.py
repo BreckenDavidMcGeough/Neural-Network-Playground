@@ -29,16 +29,11 @@ epochs = 25000
 learning_rate = 1
 
 NN = NeuralNetworkArchitecture(X, y, num_hidden_layers, num_hidden_neurons, sigmoid, epochs, learning_rate)
-print(NN.hidden_layers)
-NN.forwardPropagation()
-print(NN.yhat)
-NN.backPropagation()
-NN.forwardPropagation()
-print("\n")
+NN.train()
 print(NN.yhat)
 print("\n")
-print("MSE: " + str(NN.meanSquaredError(NN.yhat)))
-print("\n")
+
+print("MSE: " + str(NN.meanSquaredError()) + "\n")
 
 print(NN.predict(np.array([[8,3]])))
 print("\n")
