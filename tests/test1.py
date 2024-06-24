@@ -1,7 +1,7 @@
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.append('../src')
 
 from main import * 
 
@@ -19,6 +19,9 @@ y = np.array([[.75],
 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
+
+def RELU(z):
+    pass
 
 num_hidden_layers = 3
 num_hidden_neurons = 4

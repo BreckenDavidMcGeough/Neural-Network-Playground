@@ -13,6 +13,8 @@ During training, the data is propagated through the network architecture, and th
 
 * [gradient descent and backpropagation theory](https://en.wikipedia.org/wiki/Backpropagation#Matrix_multiplication)
 
+* [backpropagation and gradient descent supplemental lecture notes](https://cs231n.stanford.edu/slides/2018/cs231n_2018_ds02.pdf)
+
 Here are some links that give more information on hyperparameters and different activation functions and how they affect the training process:
 
 * [hyperparameters](https://en.wikipedia.org/wiki/Hyperparameter_(machine_learning))

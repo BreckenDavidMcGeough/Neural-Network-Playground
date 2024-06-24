@@ -1,16 +1,19 @@
 import numpy as np 
 
-class HiddenLayer:
+class HiddenLayer: #stores information about a hidden layer L
     def __init__(self, input_matrix, num_hidden_neurons, activation_function):
         self.input_matrix = input_matrix
         self.num_hidden_neurons = num_hidden_neurons
         self.activation_function = activation_function
-        self.weights = np.random.rand(len(input_matrix[0]), num_hidden_neurons)
+        self.weights = np.random.rand(len(input_matrix[0]), num_hidden_neurons) #weights matrix is number of features by num_hidden_neurons
+        self.bias = np.random.rand(1, num_hidden_neurons) #bias vector is 1 by num_hidden_neurons
 
-    def forwardPropagation(self, input_matrix):
-        self.z = np.dot(input_matrix, self.weights)
+    def forwardPropagation(self, input_matrix): #propagate inputs matrix through weights matrix, then pass through activation function and include bias term
+        self.input_matrix = input_matrix
+        self.z = np.dot(input_matrix, self.weights) #will be a matrix of size (num_samples, num_hidden_neurons)
+        self.z += self.bias #include bias
         #a = self.sigmoid(self.z)
-        self.a = self.activation_function(self.z)
+        self.a = self.activation_function(self.z) #pass each element through activation function
         return self.a
 
 class NeuralNetworkArchitecture:
@@ -22,10 +25,11 @@ class NeuralNetworkArchitecture:
         self.activation_function = activation_function
         self.hidden_layers = self.generateHiddenArchitecture()
         self.gradients = []
+        self.deltas = []
         self.epochs = epochs
         self.learning_rate = learning_rate
 
-    def generateHiddenArchitecture(self):
+    def generateHiddenArchitecture(self): #iteratively generate hidden layers, where a layer L has input that is the output of layer L-1
         print("Generating hidden layers...\n")
         hidden_layers = []
         layer_output = self.X
@@ -44,58 +48,69 @@ class NeuralNetworkArchitecture:
         for i in range(0, len(self.hidden_layers)):
             print("Weights for layer " + str(i+1) + ": \n" + str(self.hidden_layers[i].weights) + "\n")
 
-    def sigmoidDerivative(self, z):
+    def sigmoidDerivative(self, z): #derivative of sigmoid function
         return np.exp(-z) / ((1 + np.exp(-z))**2)
 
-    def forwardPropagation(self):
+    def forwardPropagation(self): #forward propagate through the network for prediction
         input_layer = self.X
         for i in range(0, len(self.hidden_layers)):
             self.hidden_layers[i].forwardPropagation(input_layer)
             input_layer = self.hidden_layers[i].a
         self.yhat = self.hidden_layers[len(self.hidden_layers)-1].a
 
-    def regressionLoss(self):
+    def regressionLoss(self): #regression loss function
         RL = (1/2) * (self.y - self.yhat)**2
         return RL
 
-    def crossEntropyLoss(self):
+    def crossEntropyLoss(self): #cross entropy loss function
         CEL = -(self.y * np.log(yhat) + (1 - self.y) * np.log(1 - yhat))
         return CEL
 
-    def gradientDescent(self):
+    def gradientDescent(self): #calculate gradients for a given layer L
         HL_len = len(self.hidden_layers)-1
         #dCdyhat = self.hidden_layers[HL_len].a - self.y
-        yhat = self.hidden_layers[HL_len].a
-        dCdyhat = -(self.y - yhat)
-        delta = np.multiply(dCdyhat, self.sigmoidDerivative(self.hidden_layers[HL_len].z))
-        dCdWL = np.dot(self.hidden_layers[HL_len-1].a.T,delta)
+
+        #first, computer gradient for the last layer
+        yhat = self.hidden_layers[HL_len].a #prediction
+        dCdyhat = -(self.y - yhat) #derivative of loss function
+        delta = np.multiply(dCdyhat, self.sigmoidDerivative(self.hidden_layers[HL_len].z)) 
+        dCdWL = np.dot(self.hidden_layers[HL_len-1].a.T,delta) #a_{L-1}^T o (dC/dyhat * dsigma_prime/dz) = dC/dWL, where o is the dot product and * is the hadamard product
         self.gradients.append(dCdWL)
+        self.deltas.append(delta)
+
+        #computer gradients from rest of layers, going backwards through the network
         for i in range(HL_len-1,0,-1):
             helper = np.dot(delta,self.hidden_layers[i+1].weights.T)
-            delta = np.multiply(helper, self.sigmoidDerivative(self.hidden_layers[i].z))
-            dCdWL = np.dot(self.hidden_layers[i-1].a.T, delta)
+            delta = np.multiply(helper, self.sigmoidDerivative(self.hidden_layers[i].z)) #delta_L = (delta_{L+1} o WL_{L+1}^T) * dsigma_prime/dz
+            dCdWL = np.dot(self.hidden_layers[i-1].a.T, delta) #a_{L-1}^T o delta_L = dC/dWL, where o is the dot product and * is the hadamard product
+            self.deltas.append(delta)
             self.gradients.append(dCdWL)
+
+        #computer gradient for the first layer
         helper = np.dot(delta,self.hidden_layers[1].weights.T)
-        delta = np.multiply(helper, self.sigmoidDerivative(self.hidden_layers[0].z))
-        dCdWL = np.dot(self.X.T, delta)
+        delta = np.multiply(helper, self.sigmoidDerivative(self.hidden_layers[0].z)) #delta_L = (delta_{L+1} o WL_{L+1}^T) * dsigma_prime/dz
+        dCdWL = np.dot(self.X.T, delta) #X^T o delta_L = dC/dWL, where o is the dot product and * is the hadamard product
+        self.deltas.append(delta)
         self.gradients.append(dCdWL)
 
-    def backPropagation(self):
-        for _ in range(0, self.epochs):
-            self.forwardPropagation()
+    def backPropagation(self): #back propagate through the network to update weights and biases based on gradient calculations at each layer
+        for _ in range(0, self.epochs): #iterate through epochs
+            self.forwardPropagation() 
             self.gradientDescent()
-            for i in range(0, len(self.hidden_layers)):
+            for i in range(0, len(self.hidden_layers)): #update weights and biases at each layer with gradients
                 self.hidden_layers[i].weights -= self.learning_rate * self.gradients[len(self.gradients)-i-1]
+                bias_gradient = np.sum(self.deltas[len(self.deltas)-i-1], axis=0)
+                self.hidden_layers[i].bias -= self.learning_rate * bias_gradient
             self.gradients = []
 
-    def predict(self, X):
+    def predict(self, X): #predict output for a given input matrix X
         input_layer = X
         for i in range(0, len(self.hidden_layers)):
             self.hidden_layers[i].forwardPropagation(input_layer)
             input_layer = self.hidden_layers[i].a
         return self.hidden_layers[len(self.hidden_layers)-1].a
 
-    def meanSquaredError(self,yhat):
+    def meanSquaredError(self,yhat): #MSE to calculate loss
         const = 1/len(self.y)
         MSE = const * sum((self.y - yhat)**2)
         return MSE
